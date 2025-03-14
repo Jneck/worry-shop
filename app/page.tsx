@@ -1,5 +1,3 @@
-import { ImageList, ImageListItem } from "@mui/material";
-
 export default function Home() {
   return (
     <div

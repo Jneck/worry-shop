@@ -7,7 +7,6 @@ import { Database, Tables } from '@/database.types';
 
 export default function LetterDetail({ letter }: { letter: Tables<'letter'> }) {
   const inputRef = useRef<HTMLInputElement | null>(null); // useRef로 값 저장
-
   return (
     <div
       style={{
@@ -21,12 +20,13 @@ export default function LetterDetail({ letter }: { letter: Tables<'letter'> }) {
       <br></br>
       <Typography>{letter.content}</Typography>
       <TextField
+        disabled={letter.status !== 'replied' ? false : true}
         multiline
         placeholder="put worries, questions or any text"
         rows={18}
         inputRef={inputRef} // useRef 연결
         sx={{
-          backgroundColor: 'white',
+          backgroundColor: letter.status !== 'replied' ? 'white' : 'lightgray',
           width: '80%',
           borderRadius: '24px',
           marginTop: '2rem',

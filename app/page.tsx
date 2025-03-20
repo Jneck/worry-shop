@@ -9,6 +9,7 @@ import {
 import { getLetters } from './lib/letter/letter.data';
 import { Suspense } from 'react';
 import Link from 'next/link';
+import { Tables } from '@/database.types';
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       <h3 style={{ marginTop: '1rem' }}>Post your worries or questions.</h3>
       <h3 style={{ marginTop: '1rem' }}>Reply nice answer that make sense.</h3>
 
+      <br></br>
       {/* Suspense를 사용하여 서버 데이터를 비동기 로드 */}
       <Suspense fallback={<p>fetching posts...</p>}>
         <LettersList />
@@ -69,42 +71,56 @@ async function LettersList() {
         marginLeft: '2rem',
       }}
     >
-      {letters.map((letter) => (
-        <Link href={`/post/${letter.id}`} key={letter.id}>
-          <ListItem
-            style={{
-              minWidth: '360px',
-              display: 'flex',
-              flexDirection: 'column',
-              backgroundColor: 'lightgray',
-            }}
-          >
-            <List>
-              <ListItemText
-                primary={letter.content}
-                style={{
-                  maxWidth: '300px',
-                  wordWrap: 'break-word',
-                  overflowWrap: 'break-word',
-                  whiteSpace: 'normal',
-                }}
-              />
-              <br />
-              <br />
-              <br />
-              <ListItemText
-                secondary={letter.reply ?? 'Click for making sense'}
-                style={{
-                  maxWidth: '300px',
-                  wordWrap: 'break-word',
-                  overflowWrap: 'break-word',
-                  whiteSpace: 'normal',
-                }}
-              />
-            </List>
-          </ListItem>
-        </Link>
-      ))}
+      {letters.map((letter) =>
+        letter.status !== 'replied' ? (
+          <Link href={`/post/${letter.id}`} key={letter.id}>
+            <Post post={letter}></Post>
+          </Link>
+        ) : (
+          <div key={letter.id}>
+            <Post post={letter}></Post>
+          </div>
+        ),
+      )}
     </List>
+  );
+}
+
+function Post({ post }: { post: Tables<'letter'> }) {
+  return (
+    <ListItem
+      style={{
+        minWidth: '360px',
+        display: 'flex',
+        flexDirection: 'column',
+        border: '1px solid lightgray', // Add border
+        borderRadius: '8px', // Optional: Add border radius for rounded corners
+        padding: '1rem', // Optional: Add padding inside the box
+      }}
+    >
+      <List>
+        <ListItemText
+          primary={post.content}
+          style={{
+            maxWidth: '300px',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            whiteSpace: 'normal',
+          }}
+        />
+        <br />
+        <br />
+        <br />
+        <ListItemText
+          secondary={post.reply ?? 'Click for making sense'}
+          style={{
+            maxWidth: '300px',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            whiteSpace: 'normal',
+          }}
+        />
+      </List>
+    </ListItem>
   );
 }

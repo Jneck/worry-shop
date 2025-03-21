@@ -22,17 +22,17 @@ export async function getLetters(): Promise<Tables<'letter'>[]> {
 
 export async function getLetter(id: number): Promise<Tables<'letter'>> {
   const supabase = await createClient("service");
-  const lettersResponse = await supabase
+  const post = await supabase
     .from("letter")
     .select()
-    .order("createdAt", { ascending: false })
-    .range(0, 1);
+    .match({id})
+    .single();
 
-  if (lettersResponse.error !== null) {
-    console.error(lettersResponse.error);
+  if (post.error !== null) {
+    console.error(post.error);
   }
-  if (!lettersResponse.data || lettersResponse.data.length === 0) {
+  if (!post.data) {
     throw new Error('no data');
   }
-  return lettersResponse.data[0];
+  return post.data;
 }

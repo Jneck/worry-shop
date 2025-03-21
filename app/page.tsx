@@ -113,11 +113,12 @@ function Post({ post }: { post: Tables<'letter'> }) {
         <br />
         <ListItemText
           secondary={post.reply ?? 'Click for making sense'}
-          style={{
+          sx={{
             maxWidth: '300px',
             wordWrap: 'break-word',
             overflowWrap: 'break-word',
             whiteSpace: 'normal',
+            '& .MuiTypography-body2': { color: 'var(--foreground)' }, // secondary 텍스트 색상 변경
           }}
         />
       </List>

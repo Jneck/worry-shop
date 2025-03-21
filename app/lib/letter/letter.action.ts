@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -8,25 +8,29 @@ export async function insertLetter(content: string) {
   const supabase = await createClient('service');
   try {
     await supabase
-    .from('letter')
-    .insert([{ status: 'pending', content: content }])} catch(e) {
-      console.error(e);
-    }
-  
+      .from('letter')
+      .insert([{ status: 'pending', content: content }]);
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+
   revalidatePath('/');
   redirect('/');
 }
 
-export async function replyLetter(id: number,reply:string) {
+export async function replyLetter(id: number, reply: string) {
   const supabase = await createClient('service');
   try {
     await supabase
-    .from('letter')
-    .update({ status: 'replied', reply:reply})
-    .eq('id', id)
-  } catch(e) {
-    console.error(e)
+      .from('letter')
+      .update({ status: 'replied', reply: reply })
+      .eq('id', id);
+  } catch (e) {
+    console.error(e);
+    return;
   }
+
   revalidatePath('/');
   revalidatePath(`/post/${id}`);
   redirect(`/post/${id}`);
